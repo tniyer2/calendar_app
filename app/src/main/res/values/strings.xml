@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MoCalendar</string>
+    <string name="event_icon">Event Icon</string>
+</resources>
