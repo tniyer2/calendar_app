@@ -1,12 +1,15 @@
 package edu.moravian.csci299.mocalendar;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 
 import java.util.Date;
 
@@ -17,7 +20,7 @@ import java.util.Date;
  *
  * NOTE: this is the easiest of the core fragments to complete
  */
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends Fragment{
     /**
      * The callbacks that can be called by this fragment on the hosting Activity.
      */
@@ -73,10 +76,26 @@ public class CalendarFragment extends Fragment {
         View base = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         // TODO: Setup the calendar
+        CalendarView calendar = base.findViewById(R.id.calendarView);
+        calendar.setDate(date.getTime()); //milliseconds since jan 1, 1970
+
+
 
         // Return the base view
         return base;
     }
     
     // TODO: get (and clear) the callbacks object as appropriate
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        callbacks = (Callbacks)context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callbacks = null;
+    }
 }

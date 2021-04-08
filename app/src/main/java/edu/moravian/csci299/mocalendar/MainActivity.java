@@ -2,8 +2,13 @@ package edu.moravian.csci299.mocalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.widget.CalendarView;
+
+import java.util.Date;
 
 /**
  * The main (and only) activity for the application that hosts all of the fragments.
@@ -19,12 +24,13 @@ import android.os.Bundle;
  * NOTE: This Activity is the bare-bones, empty, Activity. Work will be definitely needed in
  * onCreate() along with implementing some callbacks.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //FragmentManager fm = getSupportFragmentManager();
         Fragment parent = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
         if (parent == null) {
@@ -35,5 +41,11 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public void onDayChanged(Date date) {
+        // do something
+        // update the list of events based on the date
     }
 }
