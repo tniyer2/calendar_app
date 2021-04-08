@@ -1,6 +1,7 @@
 package edu.moravian.csci299.mocalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 
@@ -23,5 +24,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Fragment parent = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if (parent == null) {
+            // If no fragment is being currently displayed add one via a transaction
+            CalendarFragment fragment = CalendarFragment.newInstance();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, fragment)
+                    .commit();
+        }
     }
 }

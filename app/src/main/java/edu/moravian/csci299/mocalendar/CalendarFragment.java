@@ -65,6 +65,7 @@ public class CalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // The date to initially highlight
+        assert getArguments() != null;
         Date date = DateUtils.useDateOrNow((Date) getArguments().getSerializable(ARG_DATE));
         callbacks.onDayChanged(date);
 
