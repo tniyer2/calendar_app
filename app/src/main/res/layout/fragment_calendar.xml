@@ -3,12 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".CalendarFragment" >
+    tools:context=".CalendarFragment"
+    android:id="@+id/frameLayout">
 
     <CalendarView
         android:id="@+id/calendarView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_conversion_absoluteHeight="338dp"
+        tools:layout_conversion_absoluteWidth="350dp"
+        tools:layout_editor_absoluteX="31dp"
+        tools:layout_editor_absoluteY="0dp" />
 
 </FrameLayout>

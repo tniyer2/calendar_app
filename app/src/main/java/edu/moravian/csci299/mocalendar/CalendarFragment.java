@@ -77,9 +77,9 @@ public class CalendarFragment extends Fragment{
 
         // TODO: Setup the calendar
         CalendarView calendar = base.findViewById(R.id.calendarView);
+        //set an onDate listener
+        //calendar.setOnDateChangeListener((CalendarView.OnDateChangeListener) this);
         calendar.setDate(date.getTime()); //milliseconds since jan 1, 1970
-
-
 
         // Return the base view
         return base;
