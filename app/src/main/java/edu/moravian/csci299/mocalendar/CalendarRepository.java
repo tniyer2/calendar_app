@@ -22,14 +22,14 @@ public class CalendarRepository {
         database = Room.databaseBuilder(
                 context.getApplicationContext(),
                 AppDatabase.class,
-                "collectible_database").build();
+                "calendar_database").build();
         calendarDao = database.calendarDaoDAO();
     }
 
 
     // The public methods that simply call the DAO methods
-    public LiveData<List<Event>> getAllEvents() { return calendarDao.getAllEvents(); }
-    public LiveData<Event> getEventById(UUID id) { return calendarDao.getEventById(id); }
+    public LiveData<List<Event>> getAllEvents() { return calendarDao.getAllEvents();}
+    public LiveData<Event> getEventById(UUID id) { return calendarDao.getEventById(id);}
     public LiveData<List<Event>> getEventsBetween(Date start, Date end){ return calendarDao.getEventsBetween(start,end);}
     public LiveData<List<Event>> getEventsOnDay(Date date){ return calendarDao.getEventsOnDay(date);}
 
@@ -55,7 +55,7 @@ public class CalendarRepository {
     // The single instance of the repository
     private static CalendarRepository INSTANCE;
     public static CalendarRepository get() {
-        if (INSTANCE == null) { throw new IllegalStateException("CollectibleRepository must be initialized"); }
+        if (INSTANCE == null) { throw new IllegalStateException("CalendarRepository must be initialized"); }
         return INSTANCE;
     }
     public static void initialize(Context context) {

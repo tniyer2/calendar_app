@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.widget.CalendarView;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * The main (and only) activity for the application that hosts all of the fragments.
@@ -24,7 +25,7 @@ import java.util.Date;
  * NOTE: This Activity is the bare-bones, empty, Activity. Work will be definitely needed in
  * onCreate() along with implementing some callbacks.
  */
-public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks {
+public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks, ListFragment.Callbacks {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,9 +37,11 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
         if (parent == null) {
             // If no fragment is being currently displayed add one via a transaction
             CalendarFragment fragment = CalendarFragment.newInstance();
+            ListFragment listFragment = ListFragment.newInstance();
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_container, fragment)
+                    .add(R.id.fragment_container, listFragment)
                     .commit();
 
 //            ListFragment listFragment = ListFragment.newInstance();
@@ -51,7 +54,11 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
 
     @Override
     public void onDayChanged(Date date) {
-        // do something
-        // update the list of events based on the date
+
+    }
+
+    @Override
+    public void getEventById(UUID uuid) {
+
     }
 }

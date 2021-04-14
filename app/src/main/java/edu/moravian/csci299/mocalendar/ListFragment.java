@@ -97,6 +97,8 @@ public class ListFragment extends Fragment {
             this.events = events;
             list.setAdapter(new EventListAdapter());
         });
+
+        setHasOptionsMenu(true);
     }
 
     /**
@@ -116,6 +118,7 @@ public class ListFragment extends Fragment {
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         return base;
     }
+
 
     /**
      * When the date is changed for this fragment we need to grab a new list of events and update
@@ -150,6 +153,7 @@ public class ListFragment extends Fragment {
         if(item.getItemId() == R.id.new_item){
             Event newEvent = new Event();
             CalendarRepository.get().addItem(newEvent);
+            //callbacks.getEventById(newEvent.id);
 
             return true;
         }
