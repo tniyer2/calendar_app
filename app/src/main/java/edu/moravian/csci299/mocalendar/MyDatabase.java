@@ -6,6 +6,6 @@ import androidx.room.TypeConverters;
 
 @Database(entities = {Event.class}, version = 1)
 @TypeConverters(EventTypeConverter.class)
-public abstract class AppDatabase extends RoomDatabase{
-    public abstract CalendarDao calendarDaoDAO();
+public abstract class MyDatabase extends RoomDatabase{
+    public abstract CalendarDao calendarDAO();
 }

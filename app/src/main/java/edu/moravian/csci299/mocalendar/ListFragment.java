@@ -147,18 +147,16 @@ public class ListFragment extends Fragment {
         callbacks = null;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.new_item){
+        if (item.getItemId() == R.id.new_item) {
             Event newEvent = new Event();
             CalendarRepository.get().addItem(newEvent);
             callbacks.getEventById(newEvent.id);
 
             return true;
         }
-        else{
-
+        else {
             return super.onOptionsItemSelected(item);
         }
     }

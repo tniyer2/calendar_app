@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * A fragment that displays a calendar. When a day within the calendar is clicked, a callback method
@@ -20,24 +22,24 @@ import java.util.Date;
  *
  * NOTE: this is the easiest of the core fragments to complete
  */
-public class CalendarFragment extends Fragment{
+public class CalendarFragment extends Fragment implements CalendarView.OnDateChangeListener {
     /**
      * The callbacks that can be called by this fragment on the hosting Activity.
      */
     public interface Callbacks {
+
         /**
          * Called whenever a day is changed on the calendar.
          * @param date the day clicked
          */
         void onDayChanged(Date date);
     }
-
     // fragment initialization parameters
+
     private static final String ARG_DATE = "data";
-
     // the hosting activity callbacks
-    private Callbacks callbacks;
 
+    private Callbacks callbacks;
     /**
      * Use this factory method to create a new instance of this fragment that
      * highlights today initially.
@@ -75,17 +77,20 @@ public class CalendarFragment extends Fragment{
         // Inflate the layout for this fragment
         View base = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        // TODO: Setup the calendar
         CalendarView calendar = base.findViewById(R.id.calendarView);
-        //set an onDate listener
-        //calendar.setOnDateChangeListener((CalendarView.OnDateChangeListener) this);
+        calendar.setOnDateChangeListener(this);
         calendar.setDate(date.getTime()); //milliseconds since jan 1, 1970
 
         // Return the base view
         return base;
     }
-    
-    // TODO: get (and clear) the callbacks object as appropriate
+
+    @Override
+    public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+        GregorianCalendar c = new GregorianCalendar();
+        c.set(year + 1900, month, dayOfMonth);
+        callbacks.onDayChanged(c.getTime());
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
