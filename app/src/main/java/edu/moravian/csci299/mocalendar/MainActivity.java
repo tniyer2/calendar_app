@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.CalendarView;
 
 import java.util.Date;
@@ -49,11 +50,11 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
 
     @Override
     public void onDayChanged(Date date) {
-
+        Log.d("MainActivity", "date: " + date.toString());
     }
 
     @Override
     public void getEventById(UUID uuid) {
-
+        Log.d("MainActivity", "uuid: " + uuid);
     }
 }

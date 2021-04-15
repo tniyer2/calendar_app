@@ -14,16 +14,16 @@ import java.util.concurrent.Executors;
 public class CalendarRepository {
 
     // Internal singleton fields of the repository
-    private final AppDatabase database;
+    private final MyDatabase database;
     private final CalendarDao calendarDao;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
     private CalendarRepository(Context context) {
         database = Room.databaseBuilder(
                 context.getApplicationContext(),
-                AppDatabase.class,
+                MyDatabase.class,
                 "calendar_database").build();
-        calendarDao = database.calendarDaoDAO();
+        calendarDao = database.calendarDAO();
     }
 
 
