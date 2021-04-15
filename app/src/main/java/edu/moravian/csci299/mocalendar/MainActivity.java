@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
     @Override
     public void onDayChanged(Date date) {
         Log.d("MainActivity", "date: " + date.toString());
+        ListFragment fragment  = (ListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        fragment.setDay(date);
+
     }
 
     @Override

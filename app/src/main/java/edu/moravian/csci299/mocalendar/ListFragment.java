@@ -92,11 +92,7 @@ public class ListFragment extends Fragment {
         date = DateUtils.useDateOrNow((Date)getArguments().getSerializable(ARG_DATE));
         onDateChange();
         // TODO: maybe something related to the menu?
-        liveDataItems = CalendarRepository.get().getAllEvents();
-        liveDataItems.observe(this, (events) -> {
-            this.events = events;
-            list.setAdapter(new EventListAdapter());
-        });
+
 
         setHasOptionsMenu(true);
     }
@@ -116,6 +112,7 @@ public class ListFragment extends Fragment {
         // return the base view
         list = base.findViewById(R.id.list_view);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
+        list.setAdapter(new EventListAdapter());
         return base;
     }
 
@@ -125,7 +122,14 @@ public class ListFragment extends Fragment {
      * the UI.
      */
     private void onDateChange() {
-        // TODO
+
+        liveDataItems = CalendarRepository.get().getEventsOnDay(date);
+        liveDataItems.observe(this, (events) -> {
+            this.events = events;
+            list.getAdapter().notifyDataSetChanged();
+        });
+
+
     }
 
     // TODO: some code for (un)registering callbacks?
