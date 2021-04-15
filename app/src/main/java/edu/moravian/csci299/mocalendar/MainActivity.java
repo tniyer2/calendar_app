@@ -44,11 +44,6 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
                     .add(R.id.fragment_container, listFragment)
                     .commit();
 
-//            ListFragment listFragment = ListFragment.newInstance();
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .add(R.id.fragment_container, listFragment)
-//                    .commit();
         }
     }
 

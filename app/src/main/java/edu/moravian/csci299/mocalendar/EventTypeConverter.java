@@ -1,5 +1,7 @@
 package edu.moravian.csci299.mocalendar;
 
+import android.util.Log;
+
 import androidx.room.TypeConverter;
 
 import java.util.Date;
@@ -32,12 +34,10 @@ public class EventTypeConverter {
     }
 
     @TypeConverter
-    public EventType toEventType(String simpleName){
-        return EventType.valueOf(simpleName);
-    }
+    public EventType toEventType(String name){ return EventType.valueOf(name); }
 
     @TypeConverter
     public String fromEventType(EventType eventType){
-        return eventType.simpleName;
+        return eventType.name();
     }
 }

@@ -153,7 +153,7 @@ public class ListFragment extends Fragment {
         if(item.getItemId() == R.id.new_item){
             Event newEvent = new Event();
             CalendarRepository.get().addItem(newEvent);
-            //callbacks.getEventById(newEvent.id);
+            callbacks.getEventById(newEvent.id);
 
             return true;
         }
@@ -206,7 +206,7 @@ public class ListFragment extends Fragment {
             Event event = events.get(position);
             holder.event = event;
             holder.name.setText(event.name);
-//            holder.icon; TODO: do something for the icon?
+            holder.icon.setBackgroundResource(event.type.iconResourceId);
         }
 
 
