@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -20,7 +21,7 @@ import java.util.UUID;
  * text edit boxes (for the name and description) or popup windows (for the date, start time,
  * time and type). The event is not updated in the database until the user leaves this fragment.
  */
-public class EventFragment extends Fragment implements TextWatcher, EventTypePickerFragment.Callbacks{
+public class EventFragment extends Fragment implements TextWatcher, EventTypePickerFragment.Callbacks, DatePickerFragment.Callbacks{
 
     // fragment initialization parameters
     private static final String ARG_EVENT_ID = "event_id";
@@ -40,7 +41,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
 
     private ImageView icon;
     private EditText descriptionView, nameView;
-    private TextView date, startTime, endTime;
+    private TextView dateText, startTime, endTime;
 
 
     /**
@@ -86,7 +87,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         nameView = base.findViewById(R.id.event_name);
         icon = base.findViewById(R.id.event_fragment_icon);
         descriptionView = base.findViewById(R.id.description);
-        date = base.findViewById(R.id.date);
+        dateText = base.findViewById(R.id.date);
         startTime = base.findViewById(R.id.start_time);
         endTime = base.findViewById(R.id.end_time);
 
@@ -99,12 +100,14 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         icon.setOnClickListener(v -> {
             // event type picker fragment
             EventTypePickerFragment fragment = EventTypePickerFragment.newInstance(event.type);
-            fragment.setTargetFragment(this, 2);
+            fragment.setTargetFragment(this, EventFragment.REQUEST_EVENT_TYPE);
             fragment.show(requireFragmentManager(), DIALOG_EVENT_TYPE);
         });
 
-        date.setOnClickListener(v -> {
-            // date picker fragment
+        dateText.setOnClickListener(v -> {
+            DatePickerFragment fragment = DatePickerFragment.newInstance(event.startTime);
+            fragment.setTargetFragment(this, EventFragment.REQUEST_DATE);
+            fragment.show(requireFragmentManager(), DIALOG_DATE);
 
         });
 
@@ -128,6 +131,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     /** Updates the UI to match the event. */
     private void updateUI() {
         // TODO
+        CalendarRepository.get().updateItem(event);
     }
 
     // TODO: maybe some helpful functions for showing dialogs and the callback functions
@@ -140,11 +144,11 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     }
 
 
-//    @Override // TODO: FOR ONCE WE FIGURE OUT DATE PICKING...
-//    public void onDateSelected(Date date) {
-//        event.s
-//        dateView.setText(date.toString());
-//    }
+    @Override //
+    public void onDateSelected(Date date) {
+        event.startTime = date;
+        dateText.setText(date.toString());
+    }
 
     /**
      * When an EditText updates we update the corresponding Event field. Need to register this
@@ -165,6 +169,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     /** Required to be implemented but not needed. */
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
 
 
 }
