@@ -192,7 +192,7 @@ public class ListFragment extends Fragment {
             icon = itemView.findViewById(R.id.eventTypeIcon);
             //going to need start and end time
             itemView.setOnClickListener(v -> {
-                callbacks.showEventById(event.id);
+                callbacks.openIndividualEvent(event);
             });
         }
 

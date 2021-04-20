@@ -130,8 +130,12 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
 
     /** Updates the UI to match the event. */
     private void updateUI() {
-        // TODO
-        CalendarRepository.get().updateItem(event);
+        nameView.setText(event.name);
+        icon.setImageResource(event.type.iconResourceId);
+        descriptionView.setText(event.description);
+        dateText.setText(DateUtils.toDateString(event.startTime));
+        startTime.setText(DateUtils.toTimeString(event.startTime));
+        endTime.setText(DateUtils.toTimeString(event.endTime));
     }
 
     // TODO: maybe some helpful functions for showing dialogs and the callback functions
