@@ -46,6 +46,7 @@ import java.util.UUID;
 public class ListFragment extends Fragment {
     public interface Callbacks {
         void showEventById(UUID uuid);
+        void openIndividualEvent(Event event);
     }
 
     // fragment initialization parameters
@@ -168,12 +169,10 @@ public class ListFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.new_item) {
             Event newEvent = new Event();
-            Date date = new Date();
-            newEvent.startTime = DateUtils.getDate(2021,3,21);
-            Log.d("MainActivity", "new event date: " + DateUtils.toDateString(newEvent.startTime));
-            //EventFragment eventFragment = EventFragment.newInstance(newEvent);
+            newEvent.startTime = this.date;
+            newEvent.endTime = new Date(this.date.getTime() + 3600000);
             CalendarRepository.get().addItem(newEvent);
-            callbacks.showEventById(newEvent.id);
+            callbacks.openIndividualEvent(newEvent);
 
             return true;
         } else {
@@ -243,7 +242,6 @@ public class ListFragment extends Fragment {
 
         public void deleteEvent(int position) {
             Event event = events.get(position);
-            // ...
             CalendarRepository.get().removeItem(event);
             notifyItemRemoved(position);
         }

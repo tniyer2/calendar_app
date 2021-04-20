@@ -66,6 +66,21 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
     public void showEventById(UUID uuid) {
         Log.d("MainActivity", "uuid: " + uuid); // am i supposed to be creating the event fragment here
 
+
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.fragment_container, eventFragment)
+//                .commit();
+
+    }
+
+    @Override
+    public void openIndividualEvent(Event event) {
+        EventFragment eventFragment = EventFragment.newInstance(event);
+                getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, eventFragment)
+                .addToBackStack(null)
+                .commit();
+
     }
 
 

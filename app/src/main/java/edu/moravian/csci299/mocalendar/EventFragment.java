@@ -155,6 +155,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     @Override
     public void afterTextChanged(Editable s) {
         // TODO
+
     }
 
     /** Required to be implemented but not needed. */
