@@ -3,4 +3,6 @@
     <string name="event_icon">Event Icon</string>
     <string name="event_type">Event Type</string>
     <string name="new_event">New Event</string>
+    <string name="current_date">current_date</string>
+    <string name="temporary">temporary</string>
 </resources>

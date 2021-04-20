@@ -9,13 +9,18 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.UUID;
 
 /**
  * The fragment for a single event. It allows editing all of the details of the event, either with
  * text edit boxes (for the name and description) or popup windows (for the date, start time,
  * time and type). The event is not updated in the database until the user leaves this fragment.
  */
-public class EventFragment extends Fragment implements TextWatcher {
+public class EventFragment extends Fragment implements TextWatcher, EventTypePickerFragment.Callbacks{
 
     // fragment initialization parameters
     private static final String ARG_EVENT_ID = "event_id";
@@ -32,6 +37,11 @@ public class EventFragment extends Fragment implements TextWatcher {
 
     // argument once loaded from database
     private Event event;
+
+    private ImageView icon;
+    private EditText descriptionView, nameView;
+    private TextView date, startTime, endTime;
+
 
     /**
      * Use this factory method to create a new instance of this fragment that
@@ -54,6 +64,13 @@ public class EventFragment extends Fragment implements TextWatcher {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO: load the event and update the UI
+        if (getArguments() != null && getArguments().containsKey(ARG_EVENT_ID)) {
+            UUID id = (UUID)getArguments().getSerializable(ARG_EVENT_ID);
+            CalendarRepository.get().getEventById(id).observe(this, event -> {
+               this.event = event;
+               updateUI();
+            });
+        }
     }
 
     /**
@@ -65,11 +82,46 @@ public class EventFragment extends Fragment implements TextWatcher {
         // Inflate the layout for this fragment
         View base = inflater.inflate(R.layout.fragment_event, container, false);
 
+
+        nameView = base.findViewById(R.id.event_name);
+        icon = base.findViewById(R.id.event_fragment_icon);
+        descriptionView = base.findViewById(R.id.description);
+        date = base.findViewById(R.id.date);
+        startTime = base.findViewById(R.id.start_time);
+        endTime = base.findViewById(R.id.end_time);
+
+
+
+
+
         // TODO
+
+        icon.setOnClickListener(v -> {
+            // event type picker fragment
+            EventTypePickerFragment fragment = EventTypePickerFragment.newInstance(event.type);
+            fragment.setTargetFragment(this, 2);
+            fragment.show(requireFragmentManager(), DIALOG_EVENT_TYPE);
+        });
+
+        date.setOnClickListener(v -> {
+            // date picker fragment
+
+        });
+
+        startTime.setOnClickListener(v -> {
+            // time picker fragment
+        });
+
+        endTime.setOnClickListener(v -> {
+            // time picker fragment
+        });
 
         // Return the base view
         return base;
     }
+
+
+
 
     // TODO: save the event to the database at some point
 
@@ -80,11 +132,26 @@ public class EventFragment extends Fragment implements TextWatcher {
 
     // TODO: maybe some helpful functions for showing dialogs and the callback functions
 
+
+    @Override
+    public void onTypeSelected(EventType type){
+        event.type = type;
+        icon.setImageResource(event.type.iconResourceId);
+    }
+
+
+//    @Override // TODO: FOR ONCE WE FIGURE OUT DATE PICKING...
+//    public void onDateSelected(Date date) {
+//        event.s
+//        dateView.setText(date.toString());
+//    }
+
     /**
      * When an EditText updates we update the corresponding Event field. Need to register this
      * object with the EditText objects with addTextChangedListener(this).
      * @param s the editable object that just updated, equal to some EditText.getText() object
      */
+
     @Override
     public void afterTextChanged(Editable s) {
         // TODO
@@ -97,4 +164,6 @@ public class EventFragment extends Fragment implements TextWatcher {
     /** Required to be implemented but not needed. */
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+
 }

@@ -7,9 +7,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +24,7 @@ import java.text.BreakIterator;
 import java.util.Date;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -40,6 +43,7 @@ public class ListFragment extends Fragment {
     public interface Callbacks {
         void getEventById(UUID uuid);
     }
+
     // fragment initialization parameters
     private static final String ARG_DATE = "date";
 
@@ -52,6 +56,7 @@ public class ListFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of this fragment that
      * lists events for today.
+     *
      * @return a new instance of fragment ListFragment
      */
     public static ListFragment newInstance() {
@@ -61,6 +66,7 @@ public class ListFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of this fragment that
      * lists events for the given day.
+     *
      * @param date the date to show the event list for
      * @return a new instance of fragment ListFragment
      */
@@ -74,11 +80,12 @@ public class ListFragment extends Fragment {
 
     /**
      * Set the day for the events being listed.
+     *
      * @param date the new day for the list to show events for
      */
     public void setDay(Date date) {
-        this.date = date;
         getArguments().putSerializable(ARG_DATE, date);
+        this.date = DateUtils.useDateOrNow((Date) getArguments().getSerializable(ARG_DATE));
         onDateChange();
     }
 
@@ -88,8 +95,9 @@ public class ListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // date = DateUtils.useDateOrNow((Date)getArguments().getSerializable(ARG_DATE));
+
         date = (Date)getArguments().getSerializable(ARG_DATE);
+
         onDateChange();
         // TODO: maybe something related to the menu?
 
@@ -112,6 +120,8 @@ public class ListFragment extends Fragment {
         list = base.findViewById(R.id.list_view);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         list.setAdapter(new EventListAdapter());
+        setDay(date);
+
         return base;
     }
 
@@ -120,6 +130,7 @@ public class ListFragment extends Fragment {
      * the UI.
      */
     private void onDateChange() {
+
         LiveData<List<Event>> liveDataItems = CalendarRepository.get().getEventsOnDay(date);
         liveDataItems.observe(this, (events) -> {
             this.events = events;
@@ -137,7 +148,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        callbacks = (Callbacks)context;
+        callbacks = (Callbacks) context;
     }
 
     @Override
@@ -150,12 +161,12 @@ public class ListFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.new_item) {
             Event newEvent = new Event();
+            //EventFragment eventFragment = EventFragment.newInstance(newEvent);
             CalendarRepository.get().addItem(newEvent);
             callbacks.getEventById(newEvent.id);
 
             return true;
-        }
-        else {
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -165,6 +176,7 @@ public class ListFragment extends Fragment {
         Event event;
         final TextView name;
         final View icon;
+
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.eventTypeName);
@@ -195,7 +207,8 @@ public class ListFragment extends Fragment {
          * When we bind a view holder to an item (i.e. use the view with a view
          * holder to display a specific item in the list) we need to update the
          * various views within the holder for our new values.
-         * @param holder the ItemViewHolder holding the view to be updated
+         *
+         * @param holder   the ItemViewHolder holding the view to be updated
          * @param position the position in the list of the item to display
          */
         @Override
@@ -216,5 +229,29 @@ public class ListFragment extends Fragment {
 
     }
 
+
     // TODO: some code for the swipe-to-delete?
+
+   /* public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
+        private EventListAdapter mAdapter;
+
+        public SwipeToDeleteCallback(EventListAdapter adapter) {
+            super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+            mAdapter = adapter;
+        }
+
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+
+
+    }*/
+
 }

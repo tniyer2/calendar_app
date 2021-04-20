@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.CalendarView;
+import android.widget.TextView;
 
 import java.util.Date;
 import java.util.UUID;
@@ -26,7 +27,9 @@ import java.util.UUID;
  * NOTE: This Activity is the bare-bones, empty, Activity. Work will be definitely needed in
  * onCreate() along with implementing some callbacks.
  */
-public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks, ListFragment.Callbacks {
+public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks, ListFragment.Callbacks{
+//    TextView currentDateText;
+    Event currentEvent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +42,12 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
             // If no fragment is being currently displayed add one via a transaction
             CalendarFragment fragment = CalendarFragment.newInstance();
             ListFragment listFragment = ListFragment.newInstance();
+            TextViewFragment textViewFragment = new TextViewFragment();
+
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_container, fragment)
+                    //.add(R.id.fragment_container, textViewFragment)
                     .add(R.id.fragment_container, listFragment)
                     .commit();
 
@@ -52,11 +58,15 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
     public void onDayChanged(Date date) {
         Log.d("MainActivity", "date: " + date.toString());
         ListFragment fragment  = (ListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
         fragment.setDay(date);
     }
 
     @Override
     public void getEventById(UUID uuid) {
-        Log.d("MainActivity", "uuid: " + uuid);
+        Log.d("MainActivity", "uuid: " + uuid); // am i supposed to be creating the event fragment here
+
     }
+
+
 }
