@@ -88,7 +88,7 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     @Override
     public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
         GregorianCalendar c = new GregorianCalendar();
-        c.set(year, month, dayOfMonth-1);
+        c.set(year, month, dayOfMonth - 1);
         callbacks.onDayChanged(c.getTime());
     }
 

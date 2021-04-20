@@ -1,10 +1,14 @@
 package edu.moravian.csci299.mocalendar;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -41,7 +45,7 @@ import java.util.UUID;
  */
 public class ListFragment extends Fragment {
     public interface Callbacks {
-        void getEventById(UUID uuid);
+        void showEventById(UUID uuid);
     }
 
     // fragment initialization parameters
@@ -117,10 +121,13 @@ public class ListFragment extends Fragment {
         // TODO
 
         // return the base view
+        EventListAdapter eventListAdapter = new EventListAdapter();
         list = base.findViewById(R.id.list_view);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
-        list.setAdapter(new EventListAdapter());
-        setDay(date);
+        list.setAdapter(eventListAdapter);
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new SwipeToDeleteCallback(eventListAdapter));
+        itemTouchHelper.attachToRecyclerView(list);
 
         return base;
     }
@@ -161,9 +168,12 @@ public class ListFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.new_item) {
             Event newEvent = new Event();
+            Date date = new Date();
+            newEvent.startTime = DateUtils.getDate(2021,3,21);
+            Log.d("MainActivity", "new event date: " + DateUtils.toDateString(newEvent.startTime));
             //EventFragment eventFragment = EventFragment.newInstance(newEvent);
             CalendarRepository.get().addItem(newEvent);
-            callbacks.getEventById(newEvent.id);
+            callbacks.showEventById(newEvent.id);
 
             return true;
         } else {
@@ -181,16 +191,19 @@ public class ListFragment extends Fragment {
             super(itemView);
             name = itemView.findViewById(R.id.eventTypeName);
             icon = itemView.findViewById(R.id.eventTypeIcon);
+            //going to need start and end time
             itemView.setOnClickListener(v -> {
-                callbacks.getEventById(event.id);
+                callbacks.showEventById(event.id);
             });
         }
+
+
     }
 
     /**
      * The adapter for the items list to be displayed in a RecyclerView.
      */
-    private class EventListAdapter extends RecyclerView.Adapter<EventViewHolder> {
+    private class EventListAdapter extends RecyclerView.Adapter<EventViewHolder> implements edu.moravian.csci299.mocalendar.SwipeToDeleteCallback {
         /**
          * To create the view holder we inflate the layout we want to use for
          * each item and then return an ItemViewHolder holding the inflated
@@ -227,16 +240,24 @@ public class ListFragment extends Fragment {
             return events.size();
         }
 
+
+        public void deleteEvent(int position) {
+            Event event = events.get(position);
+            // ...
+            CalendarRepository.get().removeItem(event);
+            notifyItemRemoved(position);
+        }
+
+
     }
 
 
     // TODO: some code for the swipe-to-delete?
 
-   /* public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
+    public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         private EventListAdapter mAdapter;
-
         public SwipeToDeleteCallback(EventListAdapter adapter) {
-            super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+            super(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
             mAdapter = adapter;
         }
 
@@ -248,10 +269,9 @@ public class ListFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
+            int position = viewHolder.getAdapterPosition();
+            mAdapter.deleteEvent(position);
         }
 
-
-    }*/
-
+    }
 }

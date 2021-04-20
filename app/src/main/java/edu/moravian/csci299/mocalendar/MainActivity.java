@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
     }
 
     @Override
-    public void getEventById(UUID uuid) {
+    public void showEventById(UUID uuid) {
         Log.d("MainActivity", "uuid: " + uuid); // am i supposed to be creating the event fragment here
 
     }
