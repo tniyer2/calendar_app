@@ -45,7 +45,6 @@ public class ListFragment extends Fragment {
 
     // data
     private Date date;
-    private LiveData<List<Event>> liveDataItems;
     private List<Event> events = Collections.emptyList();
     private RecyclerView list;
     private Callbacks callbacks;
@@ -89,10 +88,10 @@ public class ListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        date = DateUtils.useDateOrNow((Date)getArguments().getSerializable(ARG_DATE));
+        // date = DateUtils.useDateOrNow((Date)getArguments().getSerializable(ARG_DATE));
+        date = (Date)getArguments().getSerializable(ARG_DATE);
         onDateChange();
         // TODO: maybe something related to the menu?
-
 
         setHasOptionsMenu(true);
     }
@@ -116,20 +115,16 @@ public class ListFragment extends Fragment {
         return base;
     }
 
-
     /**
      * When the date is changed for this fragment we need to grab a new list of events and update
      * the UI.
      */
     private void onDateChange() {
-
-        liveDataItems = CalendarRepository.get().getEventsOnDay(date);
+        LiveData<List<Event>> liveDataItems = CalendarRepository.get().getEventsOnDay(date);
         liveDataItems.observe(this, (events) -> {
             this.events = events;
             list.getAdapter().notifyDataSetChanged();
         });
-
-
     }
 
     // TODO: some code for (un)registering callbacks?
@@ -210,7 +205,6 @@ public class ListFragment extends Fragment {
             holder.name.setText(event.name);
             holder.icon.setBackgroundResource(event.type.iconResourceId);
         }
-
 
         /**
          * @return the total number of events to be displayed in the list

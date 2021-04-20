@@ -69,9 +69,9 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // The date to initially highlight
         assert getArguments() != null;
-        Date date = DateUtils.useDateOrNow((Date) getArguments().getSerializable(ARG_DATE));
+        // The date to initially highlight
+        Date date = DateUtils.useDateOrNow((Date)getArguments().getSerializable(ARG_DATE));
         callbacks.onDayChanged(date);
 
         // Inflate the layout for this fragment
@@ -88,7 +88,7 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     @Override
     public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
         GregorianCalendar c = new GregorianCalendar();
-        c.set(year + 1900, month, dayOfMonth);
+        c.set(year, month, dayOfMonth-1);
         callbacks.onDayChanged(c.getTime());
     }
 
