@@ -12,27 +12,31 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class CalendarRepository {
-
-    // Internal singleton fields of the repository
-    private final MyDatabase database;
     private final CalendarDao calendarDao;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
     private CalendarRepository(Context context) {
-        database = Room.databaseBuilder(
-                context.getApplicationContext(),
-                MyDatabase.class,
-                "calendar_database").build();
+        // Internal singleton fields of the repository
+        MyDatabase database = Room.databaseBuilder(
+            context.getApplicationContext(),
+            MyDatabase.class,
+            "calendar_database").build();
         calendarDao = database.calendarDAO();
     }
 
-
     // The public methods that simply call the DAO methods
-    public LiveData<List<Event>> getAllEvents() { return calendarDao.getAllEvents();}
-    public LiveData<Event> getEventById(UUID id) { return calendarDao.getEventById(id);}
-    public LiveData<List<Event>> getEventsBetween(Date start, Date end){ return calendarDao.getEventsBetween(start,end);}
-    public LiveData<List<Event>> getEventsOnDay(Date date){ return calendarDao.getEventsOnDay(date);}
-
+    public LiveData<List<Event>> getAllEvents() {
+        return calendarDao.getAllEvents();
+    }
+    public LiveData<Event> getEventById(UUID id) {
+        return calendarDao.getEventById(id);
+    }
+    public LiveData<List<Event>> getEventsBetween(Date start, Date end) {
+        return calendarDao.getEventsBetween(start, end);
+    }
+    public LiveData<List<Event>> getEventsOnDay(Date date){
+        return calendarDao.getEventsOnDay(date);
+    }
 
     // Insert and update methods
     public void addItem(Event item) {
@@ -46,6 +50,7 @@ public class CalendarRepository {
             calendarDao.removeEvent(item);
         });
     }
+
     public void updateItem(Event item) {
         executor.execute(() -> {
             calendarDao.updateEvent(item);

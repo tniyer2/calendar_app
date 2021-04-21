@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -34,12 +33,13 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
          */
         void onDayChanged(Date date);
     }
+
     // fragment initialization parameters
-
     private static final String ARG_DATE = "data";
-    // the hosting activity callbacks
 
+    // the hosting activity callbacks
     private Callbacks callbacks;
+
     /**
      * Use this factory method to create a new instance of this fragment that
      * highlights today initially.
@@ -70,8 +70,10 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         assert getArguments() != null;
+
         // The date to initially highlight
-        Date date = DateUtils.useDateOrNow((Date)getArguments().getSerializable(ARG_DATE));
+        Date date = (Date) getArguments().getSerializable(ARG_DATE);
+        date = DateUtils.useDateOrNow(date);
         callbacks.onDayChanged(date);
 
         // Inflate the layout for this fragment
@@ -79,7 +81,7 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
 
         CalendarView calendar = base.findViewById(R.id.calendarView);
         calendar.setOnDateChangeListener(this);
-        calendar.setDate(date.getTime()); //milliseconds since jan 1, 1970
+        calendar.setDate(date.getTime()); // milliseconds since jan 1, 1970
 
         // Return the base view
         return base;

@@ -1,11 +1,7 @@
 package edu.moravian.csci299.mocalendar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
 import android.os.Bundle;
-import android.util.Log;
-
 import java.util.Date;
 
 /**
@@ -22,6 +18,7 @@ import java.util.Date;
  * NOTE: This Activity is the bare-bones, empty, Activity. Work will be definitely needed in
  * onCreate() along with implementing some callbacks.
  */
+
 public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks, ListFragment.Callbacks, TextViewFragment.Callbacks{
 //    TextView currentDateText;
 
@@ -30,14 +27,15 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //FragmentManager fm = getSupportFragmentManager();
         Fragment parent = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
         if (parent == null) {
             // If no fragment is being currently displayed add one via a transaction
             CalendarFragment fragment = CalendarFragment.newInstance();
             ListFragment listFragment = ListFragment.newInstance();
+
             TextViewFragment textViewFragment = TextViewFragment.newInstance();
+
 
             getSupportFragmentManager()
                     .beginTransaction()
@@ -45,13 +43,12 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
                     .add(R.id.fragment_container, textViewFragment)
                     .add(R.id.fragment_container, listFragment)
                     .commit();
-
         }
     }
 
     public void onDayChanged(Date date) {
-        Log.d("MainActivity", "date: " + date.toString());
         ListFragment fragment  = (ListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
         //TextViewFragment textViewFragment = TextViewFragment.newInstance(date);
         fragment.setDay(date);
 
@@ -59,15 +56,17 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
 //                .replace(R.id.fragment_container, )
     }
 
+
     @Override
-    public void openIndividualEvent(Event event) {
+    public void showEventById(Event event) {
+
         EventFragment eventFragment = EventFragment.newInstance(event);
-                getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, eventFragment)
                 .addToBackStack(null)
                 .commit();
-
     }
+
 
 
     @Override
@@ -78,4 +77,5 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
 //                .replace(R.id.fragment_container, textViewFragment)
 //                .commit();
     }
+
 }

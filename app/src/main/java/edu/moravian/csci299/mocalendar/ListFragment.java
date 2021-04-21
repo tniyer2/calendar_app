@@ -10,7 +10,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,13 +23,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.BreakIterator;
 import java.util.Date;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
 
 /**
  * A fragment that displays a list of events. The list is a RecyclerView. When an event on the list
@@ -45,7 +41,9 @@ import java.util.UUID;
  */
 public class ListFragment extends Fragment {
     public interface Callbacks {
-        void openIndividualEvent(Event event);
+
+        void showEventById(Event event);
+
     }
 
     // fragment initialization parameters
@@ -75,6 +73,8 @@ public class ListFragment extends Fragment {
      * @return a new instance of fragment ListFragment
      */
     public static ListFragment newInstance(Date date) {
+        date = ListFragment.resetToStartOfDay(date);
+
         ListFragment fragment = new ListFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_DATE, date);
@@ -88,8 +88,9 @@ public class ListFragment extends Fragment {
      * @param date the new day for the list to show events for
      */
     public void setDay(Date date) {
-        getArguments().putSerializable(ARG_DATE, date);
-        this.date = DateUtils.useDateOrNow((Date) getArguments().getSerializable(ARG_DATE));
+        date = ListFragment.resetToStartOfDay(date);
+        this.date = DateUtils.useDateOrNow(date);
+        getArguments().putSerializable(ARG_DATE, this.date);
         onDateChange();
     }
 
@@ -100,8 +101,7 @@ public class ListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        date = (Date)getArguments().getSerializable(ARG_DATE);
-
+        date = (Date) getArguments().getSerializable(ARG_DATE);
         onDateChange();
 
         setHasOptionsMenu(true);
@@ -119,15 +119,16 @@ public class ListFragment extends Fragment {
 
         // TODO
 
-        // return the base view
         EventListAdapter eventListAdapter = new EventListAdapter();
         list = base.findViewById(R.id.list_view);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         list.setAdapter(eventListAdapter);
-        ItemTouchHelper itemTouchHelper = new
-                ItemTouchHelper(new SwipeToDeleteCallback(eventListAdapter));
-        itemTouchHelper.attachToRecyclerView(list);
 
+        ItemTouchHelper helper =
+            new ItemTouchHelper(new SwipeToDeleteCallback(eventListAdapter));
+        helper.attachToRecyclerView(list);
+
+        // return the base view
         return base;
     }
 
@@ -136,15 +137,14 @@ public class ListFragment extends Fragment {
      * the UI.
      */
     private void onDateChange() {
+        Log.d("ListFragment", "Date: " + date.toString());
 
-        LiveData<List<Event>> liveDataItems = CalendarRepository.get().getEventsOnDay(date);
-        liveDataItems.observe(this, (events) -> {
+        CalendarRepository.get().getEventsOnDay(date).observe(this, (events) -> {
             this.events = events;
             list.getAdapter().notifyDataSetChanged();
         });
     }
 
-    // TODO: some code for (un)registering callbacks?
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -166,41 +166,50 @@ public class ListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.new_item) {
-            Event newEvent = new Event();
-            newEvent.startTime = this.date;
-            newEvent.endTime = new Date(this.date.getTime() + 3600000);
-            CalendarRepository.get().addItem(newEvent);
-            callbacks.openIndividualEvent(newEvent);
+            Event event = new Event();
+
+            event.startTime = this.date;
+            event.endTime = new Date(this.date.getTime() + (long) (60 * 60 * 1000));
+
+            CalendarRepository.get().addItem(event);
+            callbacks.showEventById(event);
 
             return true;
-        } else {
+        }
+        else
+        {
             return super.onOptionsItemSelected(item);
         }
     }
 
+    private static Date resetToStartOfDay(Date date) {
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTime(date);
+        c.set(GregorianCalendar.HOUR_OF_DAY, 0);
+        c.set(GregorianCalendar.MINUTE, 0);
+        c.set(GregorianCalendar.SECOND, 0);
+        return c.getTime();
+    }
 
     private class EventViewHolder extends RecyclerView.ViewHolder {
-        Event event;
-        final TextView name;
-        final View icon;
+        public Event event;
+        public final TextView name;
+        public final View icon;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
+
             name = itemView.findViewById(R.id.eventTypeName);
             icon = itemView.findViewById(R.id.eventTypeIcon);
-            //going to need start and end time
-            itemView.setOnClickListener(v -> {
-                callbacks.openIndividualEvent(event);
-            });
+
+            itemView.setOnClickListener(v -> callbacks.showEventById(event));
         }
-
-
     }
 
     /**
      * The adapter for the items list to be displayed in a RecyclerView.
      */
-    private class EventListAdapter extends RecyclerView.Adapter<EventViewHolder> implements edu.moravian.csci299.mocalendar.SwipeToDeleteCallback {
+    private class EventListAdapter extends RecyclerView.Adapter<EventViewHolder> {
         /**
          * To create the view holder we inflate the layout we want to use for
          * each item and then return an ItemViewHolder holding the inflated
@@ -209,7 +218,9 @@ public class ListFragment extends Fragment {
         @NonNull
         @Override
         public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_type_item, parent, false);
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View v = inflater.inflate(R.layout.event_type_item, parent, false);
+
             return new EventViewHolder(v);
         }
 
@@ -237,18 +248,12 @@ public class ListFragment extends Fragment {
             return events.size();
         }
 
-
         public void deleteEvent(int position) {
             Event event = events.get(position);
             CalendarRepository.get().removeItem(event);
             notifyItemRemoved(position);
         }
-
-
     }
-
-
-    // TODO: some code for the swipe-to-delete?
 
     public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         private EventListAdapter mAdapter;
@@ -297,11 +302,14 @@ public class ListFragment extends Fragment {
 
             background.draw(c);
             icon.draw(c);
+
         }
 
 
         @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+        public boolean onMove(@NonNull RecyclerView recyclerView,
+                              @NonNull RecyclerView.ViewHolder viewHolder,
+                              @NonNull RecyclerView.ViewHolder target) {
             return false;
         }
 
@@ -310,8 +318,6 @@ public class ListFragment extends Fragment {
             int position = viewHolder.getAdapterPosition();
             mAdapter.deleteEvent(position);
         }
-
-
 
     }
 }
