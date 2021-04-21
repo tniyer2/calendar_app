@@ -4,5 +4,7 @@
     <string name="event_type">Event Type</string>
     <string name="new_event">New Event</string>
     <string name="current_date">current_date</string>
-    <string name="temporary">temporary</string>
+    <string name="description">Description</string>
+    <string name="dash">-</string>
+    <string name="icon_description">The icon for the activity.</string>
 </resources>

@@ -48,17 +48,13 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
 
     public void onDayChanged(Date date) {
         ListFragment fragment  = (ListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-
-        //TextViewFragment textViewFragment = TextViewFragment.newInstance(date);
         fragment.setDay(date);
 
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, )
     }
 
 
     @Override
-    public void showEventById(Event event) {
+    public void showEvent(Event event) {
 
         EventFragment eventFragment = EventFragment.newInstance(event);
         getSupportFragmentManager().beginTransaction()

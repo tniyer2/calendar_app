@@ -21,7 +21,7 @@ import java.util.UUID;
  * text edit boxes (for the name and description) or popup windows (for the date, start time,
  * time and type). The event is not updated in the database until the user leaves this fragment.
  */
-public class EventFragment extends Fragment implements TextWatcher, EventTypePickerFragment.Callbacks, DatePickerFragment.Callbacks {
+public class EventFragment extends Fragment implements TextWatcher, EventTypePickerFragment.Callbacks, DatePickerFragment.Callbacks, TimePickerFragment.Callbacks {
     // fragment initialization parameters
     private static final String ARG_EVENT_ID = "event_id";
 
@@ -88,6 +88,10 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         startTime = base.findViewById(R.id.start_time);
         endTime = base.findViewById(R.id.end_time);
 
+
+        nameView.addTextChangedListener(this);
+        descriptionView.addTextChangedListener(this);
+
         icon.setOnClickListener(v -> {
             // event type picker fragment
             EventTypePickerFragment fragment = EventTypePickerFragment.newInstance(event.type);
@@ -125,7 +129,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         nameView.setText(event.name);
         icon.setImageResource(event.type.iconResourceId);
         descriptionView.setText(event.description);
-        dateText.setText(DateUtils.toDateString(event.startTime));
+        dateText.setText(DateUtils.toFullDateString(event.startTime));
         startTime.setText(DateUtils.toTimeString(event.startTime));
         endTime.setText(DateUtils.toTimeString(event.endTime));
 
@@ -134,8 +138,8 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     @Override
     public void onStop() {
         super.onStop();
-        event.description = descriptionView.getText().toString();
-        event.name = nameView.getText().toString();
+//        event.description = descriptionView.getText().toString();
+//        event.name = nameView.getText().toString();
         CalendarRepository.get().updateItem(event);
     }
 
@@ -149,8 +153,8 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
 
     @Override //
     public void onDateSelected(Date date) {
-        event.startTime = date;
-        dateText.setText(date.toString());
+        dateText.setText(DateUtils.toFullDateString(date));
+        event.startTime.setTime(date.getTime());
     }
 
     /**
@@ -161,7 +165,12 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
 
     @Override
     public void afterTextChanged(Editable s) {
-        // TODO
+        if(s == this.nameView.getText()){
+            this.event.name = s.toString();
+        }
+        else if(s == this.descriptionView.getText()){
+            this.event.description = s.toString();
+        }
     }
 
     /** Required to be implemented but not needed. */
@@ -171,4 +180,16 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     /** Required to be implemented but not needed. */
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+    @Override
+    public void onTimeSelected(Date date, Boolean isStartTime) {
+        if(isStartTime){
+            event.startTime = date;
+            startTime.setText(DateUtils.toTimeString(event.startTime));
+        }
+        else{
+            event.endTime = date;
+            endTime.setText(DateUtils.toTimeString(event.endTime));
+        }
+    }
 }

@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.TextView;
 
 import java.util.Date;
@@ -42,7 +43,7 @@ import java.util.List;
 public class ListFragment extends Fragment {
     public interface Callbacks {
 
-        void showEventById(Event event);
+        void showEvent(Event event);
 
     }
 
@@ -117,8 +118,6 @@ public class ListFragment extends Fragment {
         // Inflate the layout for this fragment
         View base = inflater.inflate(R.layout.fragment_list, container, false);
 
-        // TODO
-
         EventListAdapter eventListAdapter = new EventListAdapter();
         list = base.findViewById(R.id.list_view);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -167,12 +166,10 @@ public class ListFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.new_item) {
             Event event = new Event();
-
             event.startTime = this.date;
             event.endTime = new Date(this.date.getTime() + (long) (60 * 60 * 1000));
-
             CalendarRepository.get().addItem(event);
-            callbacks.showEventById(event);
+            callbacks.showEvent(event);
 
             return true;
         }
@@ -198,11 +195,10 @@ public class ListFragment extends Fragment {
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
-
             name = itemView.findViewById(R.id.eventTypeName);
             icon = itemView.findViewById(R.id.eventTypeIcon);
+            itemView.setOnClickListener(v -> callbacks.showEvent(event));
 
-            itemView.setOnClickListener(v -> callbacks.showEventById(event));
         }
     }
 
@@ -253,6 +249,7 @@ public class ListFragment extends Fragment {
             CalendarRepository.get().removeItem(event);
             notifyItemRemoved(position);
         }
+
     }
 
     public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
