@@ -112,11 +112,15 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         });
 
         startTime.setOnClickListener(v -> {
-            // time picker fragment
+            TimePickerFragment fragment = TimePickerFragment.newInstance(true, event.startTime);
+            fragment.setTargetFragment(this, EventFragment.REQUEST_TIME);
+            fragment.show(requireFragmentManager(), DIALOG_TIME);
         });
 
         endTime.setOnClickListener(v -> {
-            // time picker fragment
+            TimePickerFragment fragment = TimePickerFragment.newInstance(false, event.endTime);
+            fragment.setTargetFragment(this, EventFragment.REQUEST_TIME);
+            fragment.show(requireFragmentManager(), DIALOG_TIME);
         });
 
         // Return the base view
@@ -136,6 +140,15 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         dateText.setText(DateUtils.toDateString(event.startTime));
         startTime.setText(DateUtils.toTimeString(event.startTime));
         endTime.setText(DateUtils.toTimeString(event.endTime));
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        event.description = descriptionView.getText().toString();
+        event.name = nameView.getText().toString();
+        CalendarRepository.get().updateItem(event);
     }
 
     // TODO: maybe some helpful functions for showing dialogs and the callback functions
