@@ -21,8 +21,7 @@ import java.util.UUID;
  * text edit boxes (for the name and description) or popup windows (for the date, start time,
  * time and type). The event is not updated in the database until the user leaves this fragment.
  */
-public class EventFragment extends Fragment implements TextWatcher, EventTypePickerFragment.Callbacks, DatePickerFragment.Callbacks{
-
+public class EventFragment extends Fragment implements TextWatcher, EventTypePickerFragment.Callbacks, DatePickerFragment.Callbacks {
     // fragment initialization parameters
     private static final String ARG_EVENT_ID = "event_id";
 
@@ -42,7 +41,6 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     private ImageView icon;
     private EditText descriptionView, nameView;
     private TextView dateText, startTime, endTime;
-
 
     /**
      * Use this factory method to create a new instance of this fragment that
@@ -64,7 +62,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: load the event and update the UI
+
         if (getArguments() != null && getArguments().containsKey(ARG_EVENT_ID)) {
             UUID id = (UUID)getArguments().getSerializable(ARG_EVENT_ID);
             CalendarRepository.get().getEventById(id).observe(this, event -> {
@@ -83,19 +81,12 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         // Inflate the layout for this fragment
         View base = inflater.inflate(R.layout.fragment_event, container, false);
 
-
         nameView = base.findViewById(R.id.event_name);
         icon = base.findViewById(R.id.event_fragment_icon);
         descriptionView = base.findViewById(R.id.description);
         dateText = base.findViewById(R.id.date);
         startTime = base.findViewById(R.id.start_time);
         endTime = base.findViewById(R.id.end_time);
-
-
-
-
-
-        // TODO
 
         icon.setOnClickListener(v -> {
             // event type picker fragment
@@ -123,9 +114,6 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         return base;
     }
 
-
-
-
     // TODO: save the event to the database at some point
 
     /** Updates the UI to match the event. */
@@ -140,13 +128,11 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
 
     // TODO: maybe some helpful functions for showing dialogs and the callback functions
 
-
     @Override
     public void onTypeSelected(EventType type){
         event.type = type;
         icon.setImageResource(event.type.iconResourceId);
     }
-
 
     @Override //
     public void onDateSelected(Date date) {
@@ -163,7 +149,6 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     @Override
     public void afterTextChanged(Editable s) {
         // TODO
-
     }
 
     /** Required to be implemented but not needed. */
@@ -173,7 +158,4 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     /** Required to be implemented but not needed. */
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) { }
-
-
-
 }
