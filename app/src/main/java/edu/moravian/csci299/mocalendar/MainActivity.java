@@ -2,16 +2,11 @@ package edu.moravian.csci299.mocalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.CalendarView;
-import android.widget.TextView;
 
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * The main (and only) activity for the application that hosts all of the fragments.
@@ -28,60 +23,38 @@ import java.util.UUID;
  * onCreate() along with implementing some callbacks.
  */
 public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks, ListFragment.Callbacks{
-//    TextView currentDateText;
-    Event currentEvent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //FragmentManager fm = getSupportFragmentManager();
         Fragment parent = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
         if (parent == null) {
             // If no fragment is being currently displayed add one via a transaction
             CalendarFragment fragment = CalendarFragment.newInstance();
             ListFragment listFragment = ListFragment.newInstance();
-            TextViewFragment textViewFragment = new TextViewFragment();
 
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_container, fragment)
-                    //.add(R.id.fragment_container, textViewFragment)
                     .add(R.id.fragment_container, listFragment)
                     .commit();
-
         }
     }
 
     @Override
     public void onDayChanged(Date date) {
-        Log.d("MainActivity", "date: " + date.toString());
         ListFragment fragment  = (ListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-
         fragment.setDay(date);
     }
 
     @Override
-    public void showEventById(UUID uuid) {
-        Log.d("MainActivity", "uuid: " + uuid); // am i supposed to be creating the event fragment here
-
-
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, eventFragment)
-//                .commit();
-
-    }
-
-    @Override
-    public void openIndividualEvent(Event event) {
+    public void showEventById(Event event) {
         EventFragment eventFragment = EventFragment.newInstance(event);
-                getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, eventFragment)
                 .addToBackStack(null)
                 .commit();
-
     }
-
-
 }
