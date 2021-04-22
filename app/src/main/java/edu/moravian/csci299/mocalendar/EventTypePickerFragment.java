@@ -94,8 +94,8 @@ public class EventTypePickerFragment extends DialogFragment {
 
             // set the icon and name
             EventType type = EVENT_TYPES[position];
-            ((ImageView)view.findViewById(R.id.event_type_icon)).setImageResource(type.iconResourceId);
-            ((TextView)view.findViewById(R.id.event_item_name)).setText(type.simpleName);
+            ((ImageView)view.findViewById(R.id.eventTypeIcon)).setImageResource(type.iconResourceId);
+            ((TextView)view.findViewById(R.id.eventTypeName)).setText(type.simpleName);
 
             // returns the view
             return view;

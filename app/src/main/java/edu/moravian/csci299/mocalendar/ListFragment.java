@@ -56,6 +56,7 @@ public class ListFragment extends Fragment {
     private List<Event> events = Collections.emptyList();
     private RecyclerView list;
     private Callbacks callbacks;
+    private TextView currentDate;
 
     /**
      * Use this factory method to create a new instance of this fragment that
@@ -94,6 +95,12 @@ public class ListFragment extends Fragment {
         this.date = DateUtils.useDateOrNow(date);
         getArguments().putSerializable(ARG_DATE, this.date);
         onDateChange();
+        if(currentDate != null){
+            currentDate.setText(DateUtils.toDateString(date));
+        }
+        else{
+            Log.d("null", "why");
+        }
     }
 
     /**
@@ -105,6 +112,7 @@ public class ListFragment extends Fragment {
 
         date = (Date) getArguments().getSerializable(ARG_DATE);
         onDateChange();
+
 
         setHasOptionsMenu(true);
     }
@@ -118,6 +126,9 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View base = inflater.inflate(R.layout.fragment_list, container, false);
+        currentDate = base.findViewById(R.id.current_date_textview);
+
+        currentDate.setText(DateUtils.toDateString(date));
 
         EventListAdapter eventListAdapter = new EventListAdapter();
         list = base.findViewById(R.id.list_view);
@@ -143,6 +154,7 @@ public class ListFragment extends Fragment {
             this.events = events;
             list.getAdapter().notifyDataSetChanged();
         });
+
     }
 
     @Override
@@ -223,7 +235,7 @@ public class ListFragment extends Fragment {
         @Override
         public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View v = inflater.inflate(R.layout.event_type_item, parent, false);
+            View v = inflater.inflate(R.layout.recycler_view_item, parent, false);
 
             return new EventViewHolder(v);
         }
@@ -280,7 +292,7 @@ public class ListFragment extends Fragment {
 
 
         @Override
-        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             super.onChildDraw(c, recyclerView, viewHolder, dX,
                     dY, actionState, isCurrentlyActive);
             View itemView = viewHolder.itemView;

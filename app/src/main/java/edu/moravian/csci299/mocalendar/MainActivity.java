@@ -21,7 +21,7 @@ import java.util.Date;
  * onCreate() along with implementing some callbacks.
  */
 
-public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks, ListFragment.Callbacks, TextViewFragment.Callbacks{
+public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks, ListFragment.Callbacks{
 //    TextView currentDateText;
 
     @Override
@@ -36,13 +36,10 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
             CalendarFragment fragment = CalendarFragment.newInstance();
             ListFragment listFragment = ListFragment.newInstance();
 
-            TextViewFragment textViewFragment = TextViewFragment.newInstance();
-
 
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_container, fragment)
-                    .add(R.id.fragment_container, textViewFragment)
                     .add(R.id.fragment_container, listFragment)
                     .commit();
         }
@@ -66,15 +63,5 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
     }
 
 
-
-    @Override
-    public void updateDateTextView(Date date) {
-//        Log.d("Main", DateUtils.toDateString(date));
-//        TextViewFragment textViewFragment = TextViewFragment.newInstance(date);
-//        textViewFragment.setCurrentDateTextView(date);
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, textViewFragment)
-//                .commit();
-    }
 
 }
