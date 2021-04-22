@@ -2,6 +2,8 @@ package edu.moravian.csci299.mocalendar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
+
 import java.util.Date;
 
 /**
@@ -67,8 +69,9 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
 
     @Override
     public void updateDateTextView(Date date) {
+//        Log.d("Main", DateUtils.toDateString(date));
 //        TextViewFragment textViewFragment = TextViewFragment.newInstance(date);
-////        textViewFragment.setCurrentDateTextView(date);
+//        textViewFragment.setCurrentDateTextView(date);
 //        getSupportFragmentManager().beginTransaction()
 //                .replace(R.id.fragment_container, textViewFragment)
 //                .commit();

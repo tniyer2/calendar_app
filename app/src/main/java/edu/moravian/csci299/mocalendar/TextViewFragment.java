@@ -16,7 +16,7 @@ import java.util.Date;
 public class TextViewFragment extends Fragment {
     private static final String ARG_DATE = "date";
     TextView currentDateTextView;
-    Date date;
+
 
     public interface Callbacks {
 
@@ -55,6 +55,9 @@ public class TextViewFragment extends Fragment {
     }
 
     public void setCurrentDateTextView(Date date){
+        if(date == null){
+            date = new Date();
+        }
         currentDateTextView.setText(DateUtils.toDateString(date));
         callbacks.updateDateTextView(date);
     }

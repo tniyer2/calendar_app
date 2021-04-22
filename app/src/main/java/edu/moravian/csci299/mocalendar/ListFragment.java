@@ -21,7 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Date;
@@ -190,13 +190,20 @@ public class ListFragment extends Fragment {
 
     private class EventViewHolder extends RecyclerView.ViewHolder {
         public Event event;
-        public final TextView name;
-        public final View icon;
+        public final TextView name, description, startTime, endTime;
+        public final ImageView icon;
+
+
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.eventTypeName);
-            icon = itemView.findViewById(R.id.eventTypeIcon);
+            name = itemView.findViewById(R.id.event_item_name);
+            icon = itemView.findViewById(R.id.event_type_icon);
+            description = itemView.findViewById(R.id.event_type_item_desc);
+            startTime = itemView.findViewById(R.id.item_start_time);
+            endTime = itemView.findViewById(R.id.item_end_time);
+
+
             itemView.setOnClickListener(v -> callbacks.showEvent(event));
 
         }
@@ -233,7 +240,11 @@ public class ListFragment extends Fragment {
             Event event = events.get(position);
             holder.event = event;
             holder.name.setText(event.name);
-            holder.icon.setBackgroundResource(event.type.iconResourceId);
+            holder.icon.setImageResource(event.type.iconResourceId);
+            holder.description.setText(event.description);
+            holder.startTime.setText(DateUtils.toTimeString(event.startTime));
+            holder.endTime.setText(DateUtils.toTimeString(event.endTime));
+
         }
 
         /**

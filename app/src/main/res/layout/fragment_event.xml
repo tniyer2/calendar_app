@@ -20,12 +20,12 @@
 
         <EditText
             android:id="@+id/event_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="autofillHints"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="@string/new_event"
-            android:autofillHints="autofillHints"
             tools:ignore="LabelFor" />
     </TableRow>
 
@@ -70,7 +70,7 @@
 
         <EditText
             android:id="@+id/description"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:ems="10"

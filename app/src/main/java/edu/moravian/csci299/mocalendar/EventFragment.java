@@ -138,8 +138,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     @Override
     public void onStop() {
         super.onStop();
-//        event.description = descriptionView.getText().toString();
-//        event.name = nameView.getText().toString();
+        icon.setImageResource(event.type.iconResourceId);
         CalendarRepository.get().updateItem(event);
     }
 
@@ -153,8 +152,11 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
 
     @Override //
     public void onDateSelected(Date date) {
-        dateText.setText(DateUtils.toFullDateString(date));
-        event.startTime.setTime(date.getTime());
+        event.startTime = DateUtils.combineDateAndTime(date, event.startTime);
+        if(event.endTime != null){
+            event.endTime = DateUtils.combineDateAndTime(date, event.endTime);
+        }
+        updateUI();
     }
 
     /**
