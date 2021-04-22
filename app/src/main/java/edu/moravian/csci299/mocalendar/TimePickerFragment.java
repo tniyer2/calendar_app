@@ -66,7 +66,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
         Date date = DateUtils.useDateOrNow((Date)getArguments().getSerializable(ARG_TIME));
         int[] time = DateUtils.getHourMinute(date);
-        return new TimePickerDialog(requireContext(),  this, time[0], time[1], true);
+        return new TimePickerDialog(requireContext(),  this, time[0], time[1], false);
     }
 
 

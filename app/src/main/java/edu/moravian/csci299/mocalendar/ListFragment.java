@@ -3,7 +3,6 @@ package edu.moravian.csci299.mocalendar;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -232,7 +231,7 @@ public class ListFragment extends Fragment {
         @Override
         public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View v = inflater.inflate(R.layout.recycler_view_item, parent, false);
+            View v = inflater.inflate(R.layout.event_item, parent, false);
 
             return new EventViewHolder(v);
         }
