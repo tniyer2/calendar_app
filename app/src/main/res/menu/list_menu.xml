@@ -6,4 +6,9 @@
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/new_event"
         app:showAsAction="ifRoom|withText"/>
+    <item
+        android:id="@+id/new_assignment"
+        android:icon="@drawable/assignment"
+        android:title="@string/new_assignment"
+        app:showAsAction="ifRoom|withText"/>
 </menu>

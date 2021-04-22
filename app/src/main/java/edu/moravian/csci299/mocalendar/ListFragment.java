@@ -95,7 +95,7 @@ public class ListFragment extends Fragment {
         getArguments().putSerializable(ARG_DATE, this.date);
         onDateChange();
         if(currentDate != null){
-            currentDate.setText(DateUtils.toDateString(date));
+            currentDate.setText(DateUtils.toFullDateString(date));
         }
     }
 
@@ -124,7 +124,7 @@ public class ListFragment extends Fragment {
         View base = inflater.inflate(R.layout.fragment_list, container, false);
         currentDate = base.findViewById(R.id.current_date_textview);
 
-        currentDate.setText(DateUtils.toDateString(date));
+        currentDate.setText(DateUtils.toFullDateString(date));
 
         EventListAdapter eventListAdapter = new EventListAdapter();
         list = base.findViewById(R.id.list_view);

@@ -6,4 +6,5 @@
     <string name="description">Description</string>
     <string name="dash">-</string>
     <string name="icon_description">The icon for the activity.</string>
+    <string name="new_assignment">New Assignment</string>
 </resources>
