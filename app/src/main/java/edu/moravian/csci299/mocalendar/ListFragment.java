@@ -1,5 +1,6 @@
 package edu.moravian.csci299.mocalendar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -268,12 +269,13 @@ public class ListFragment extends Fragment {
         private Drawable icon;
         private final ColorDrawable background;
 
+        @SuppressLint("ResourceAsColor")
         public SwipeToDeleteCallback(EventListAdapter adapter) {
             super(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
             mAdapter = adapter;
             icon = ContextCompat.getDrawable(getContext(),
                     R.drawable.ic_delete_white_36);
-            background = new ColorDrawable(Color.RED);
+            background = new ColorDrawable(R.color.purple_200);
         }
 
 
