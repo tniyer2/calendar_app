@@ -98,9 +98,6 @@ public class ListFragment extends Fragment {
         if(currentDate != null){
             currentDate.setText(DateUtils.toDateString(date));
         }
-        else{
-            Log.d("null", "why");
-        }
     }
 
     /**
@@ -286,7 +283,7 @@ public class ListFragment extends Fragment {
             super(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
             mAdapter = adapter;
             icon = ContextCompat.getDrawable(getContext(),
-                    R.drawable.ic_delete_white_36);
+                    R.drawable.delete);
             background = new ColorDrawable(R.color.purple_200);
         }
 
