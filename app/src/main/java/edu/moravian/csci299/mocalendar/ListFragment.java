@@ -191,12 +191,25 @@ public class ListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.new_item) {
+            Log.d("event", "onOptionsItemSelected: ");
+
             Event event = new Event();
             event.startTime = this.date;
             event.endTime = new Date(this.date.getTime() + (long) (60 * 60 * 1000));
+            event.name = "New Event";
             CalendarRepository.get().addItem(event);
             callbacks.showEvent(event);
+            return true;
+        }
 
+        else if(item.getItemId() == R.id.new_assignment) {
+            Log.d("assignment", "onOptionsItemSelected: ");
+            Event event = new Event();
+            event.startTime = this.date;
+            event.endTime = event.startTime;
+            event.name = "New Assignment";
+            CalendarRepository.get().addItem(event);
+            callbacks.showEvent(event);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -218,7 +231,7 @@ public class ListFragment extends Fragment {
 
     private class EventViewHolder extends RecyclerView.ViewHolder {
         public Event event;
-        public final TextView name, description, startTime, endTime;
+        public final TextView name, description, startTime, endTime, dash;
         public final ImageView icon;
 
         /**
@@ -232,6 +245,8 @@ public class ListFragment extends Fragment {
             description = itemView.findViewById(R.id.event_type_item_desc);
             startTime = itemView.findViewById(R.id.item_start_time);
             endTime = itemView.findViewById(R.id.item_end_time);
+            dash = itemView.findViewById(R.id.simple_dash);
+
 
             itemView.setOnClickListener(v -> callbacks.showEvent(event));
         }
@@ -271,7 +286,12 @@ public class ListFragment extends Fragment {
             holder.icon.setImageResource(event.type.iconResourceId);
             holder.description.setText(event.description);
             holder.startTime.setText(DateUtils.toTimeString(event.startTime));
-            holder.endTime.setText(DateUtils.toTimeString(event.endTime));
+
+            if(event.startTime.toString().equals(event.endTime.toString())){
+                holder.endTime.setText("");
+            }
+            else
+                holder.endTime.setText(DateUtils.toTimeString(event.endTime));
 
         }
 

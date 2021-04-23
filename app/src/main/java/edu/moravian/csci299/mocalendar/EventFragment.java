@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
 
     private ImageView icon;
     private EditText descriptionView, nameView;
-    private TextView dateText, startTime, endTime;
+    private TextView dateText, startTime, endTime, simpleDash;
 
     /**
      * Use this factory method to create a new instance of this fragment that
@@ -92,6 +93,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         dateText = base.findViewById(R.id.date);
         startTime = base.findViewById(R.id.start_time);
         endTime = base.findViewById(R.id.end_time);
+        simpleDash = base.findViewById(R.id.simple_dash);
 
         nameView.addTextChangedListener(this);
         descriptionView.addTextChangedListener(this);
@@ -135,7 +137,16 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         descriptionView.setText(event.description);
         dateText.setText(DateUtils.toFullDateString(event.startTime));
         startTime.setText(DateUtils.toTimeString(event.startTime));
-        endTime.setText(DateUtils.toTimeString(event.endTime));
+
+        //for if the event is an assignment or not. Assignments do not display an endTime unless changed
+        if(event.startTime.toString().equals(event.endTime.toString())) {
+            Log.d("same", DateUtils.toFullDateString(event.startTime) + " " + DateUtils.toFullDateString(event.endTime));
+            endTime.setText("");
+            simpleDash.setText("");
+
+        }
+        else{
+            endTime.setText(DateUtils.toTimeString(event.endTime));}
 
     }
 

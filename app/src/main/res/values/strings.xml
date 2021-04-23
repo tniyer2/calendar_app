@@ -2,9 +2,9 @@
     <string name="app_name">MoCalendar</string>
     <string name="event_icon">Event Icon</string>
     <string name="event_type">Event Type</string>
-    <string name="new_event">New Event</string>
     <string name="description">Description</string>
     <string name="dash">-</string>
     <string name="icon_description">The icon for the activity.</string>
     <string name="new_assignment">New Assignment</string>
+    <string name="new_event">New Event</string>
 </resources>

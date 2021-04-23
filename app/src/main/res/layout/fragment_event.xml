@@ -25,7 +25,6 @@
             android:autofillHints="autofillHints"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="@string/new_event"
             tools:ignore="LabelFor" />
     </TableRow>
 
@@ -52,7 +51,7 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/simple_dash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dash" />
