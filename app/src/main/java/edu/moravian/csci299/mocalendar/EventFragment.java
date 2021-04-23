@@ -58,6 +58,7 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
 
     /**
      * Upon creation load the data. Once the data is loaded, update the UI.
+     * @param savedInstanceState
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,10 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     /**
      * Create the view from the layout, save references to all of the important
      * views within in, then hook up the listeners.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return the base view.
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,7 +92,6 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         dateText = base.findViewById(R.id.date);
         startTime = base.findViewById(R.id.start_time);
         endTime = base.findViewById(R.id.end_time);
-
 
         nameView.addTextChangedListener(this);
         descriptionView.addTextChangedListener(this);
@@ -122,9 +126,9 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         return base;
     }
 
-    // TODO: save the event to the database at some point
-
-    /** Updates the UI to match the event. */
+    /**
+     * Updates the UI to match the event.
+     */
     private void updateUI() {
         nameView.setText(event.name);
         icon.setImageResource(event.type.iconResourceId);
@@ -135,6 +139,9 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
 
     }
 
+    /**
+     * updates the database with the edited event.
+     */
     @Override
     public void onStop() {
         super.onStop();
@@ -142,18 +149,25 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
         CalendarRepository.get().updateItem(event);
     }
 
-    // TODO: maybe some helpful functions for showing dialogs and the callback functions
-
+    /**
+     * Sets event.type and the icon.
+     * @param type the event type that was picked
+     */
     @Override
     public void onTypeSelected(EventType type){
         event.type = type;
         icon.setImageResource(event.type.iconResourceId);
     }
 
-    @Override //
+    /**
+     * Sets event's time after date is picked.
+     * @param date the date that was picked
+     */
+    @Override
     public void onDateSelected(Date date) {
         event.startTime = DateUtils.combineDateAndTime(date, event.startTime);
-        if(event.endTime != null){
+        if (event.endTime != null)
+        {
             event.endTime = DateUtils.combineDateAndTime(date, event.endTime);
         }
         updateUI();
@@ -164,7 +178,6 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
      * object with the EditText objects with addTextChangedListener(this).
      * @param s the editable object that just updated, equal to some EditText.getText() object
      */
-
     @Override
     public void afterTextChanged(Editable s) {
         if(s == this.nameView.getText()){
@@ -183,13 +196,20 @@ public class EventFragment extends Fragment implements TextWatcher, EventTypePic
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
+    /**
+     * Sets either the startTime or endTime of the event when a time is selected.
+     * @param date the date that will be used for the time.
+     * @param isStartTime determines whether the time selected is a start time or not
+     */
     @Override
     public void onTimeSelected(Date date, Boolean isStartTime) {
-        if(isStartTime){
+        if (isStartTime)
+        {
             event.startTime = date;
             startTime.setText(DateUtils.toTimeString(event.startTime));
         }
-        else{
+        else
+        {
             event.endTime = date;
             endTime.setText(DateUtils.toTimeString(event.endTime));
         }

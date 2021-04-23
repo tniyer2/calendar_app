@@ -1,8 +1,8 @@
 package edu.moravian.csci299.mocalendar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.Date;
 
@@ -20,10 +20,11 @@ import java.util.Date;
  * NOTE: This Activity is the bare-bones, empty, Activity. Work will be definitely needed in
  * onCreate() along with implementing some callbacks.
  */
-
-public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks, ListFragment.Callbacks{
-//    TextView currentDateText;
-
+public class MainActivity extends AppCompatActivity implements CalendarFragment.Callbacks, ListFragment.Callbacks {
+    /**
+     * Adds a CalendarFragment and ListFragment to be displayed.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
             CalendarFragment fragment = CalendarFragment.newInstance();
             ListFragment listFragment = ListFragment.newInstance();
 
-
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_container, fragment)
@@ -45,23 +45,25 @@ public class MainActivity extends AppCompatActivity implements CalendarFragment.
         }
     }
 
+    /**
+     * Sets the day of the list fragment to the newly selected one.
+     * @param date the Date selected.
+     */
     public void onDayChanged(Date date) {
         ListFragment fragment  = (ListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         fragment.setDay(date);
-
     }
 
-
+    /**
+     * Creates and adds a new event fragment to the list.
+     * @param event the event to show.
+     */
     @Override
     public void showEvent(Event event) {
-
         EventFragment eventFragment = EventFragment.newInstance(event);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, eventFragment)
                 .addToBackStack(null)
                 .commit();
     }
-
-
-
 }

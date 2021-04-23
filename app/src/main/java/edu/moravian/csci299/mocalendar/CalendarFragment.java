@@ -26,7 +26,6 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
      * The callbacks that can be called by this fragment on the hosting Activity.
      */
     public interface Callbacks {
-
         /**
          * Called whenever a day is changed on the calendar.
          * @param date the day clicked
@@ -64,7 +63,11 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     }
 
     /**
-     * Create the view of this fragment.
+     * Initializes the date and the calendar view.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return the base view.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,6 +90,13 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
         return base;
     }
 
+    /**
+     * Converts day to Date object and calls the callback.
+     * @param view the CalendarView.
+     * @param year the year.
+     * @param month the month.
+     * @param dayOfMonth the dayOfMonth.
+     */
     @Override
     public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
         GregorianCalendar c = new GregorianCalendar();
@@ -94,12 +104,19 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
         callbacks.onDayChanged(c.getTime());
     }
 
+    /**
+     * Sets the callbacks.
+     * @param context the context of this fragment.
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         callbacks = (Callbacks)context;
     }
 
+    /**
+     * Sets the callbacks to null.
+     */
     @Override
     public void onDetach() {
         super.onDetach();

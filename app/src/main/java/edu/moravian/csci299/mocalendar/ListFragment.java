@@ -42,9 +42,11 @@ import java.util.List;
  */
 public class ListFragment extends Fragment {
     public interface Callbacks {
-
+        /**
+         * Called when an event needs to be displayed.
+         * @param event the event to show.
+         */
         void showEvent(Event event);
-
     }
 
     // fragment initialization parameters
@@ -70,7 +72,6 @@ public class ListFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of this fragment that
      * lists events for the given day.
-     *
      * @param date the date to show the event list for
      * @return a new instance of fragment ListFragment
      */
@@ -86,7 +87,6 @@ public class ListFragment extends Fragment {
 
     /**
      * Set the day for the events being listed.
-     *
      * @param date the new day for the list to show events for
      */
     public void setDay(Date date) {
@@ -153,24 +153,41 @@ public class ListFragment extends Fragment {
 
     }
 
+    /**
+     * Inflate the list menu.
+     * @param menu the options menu.
+     * @param inflater the inflater.
+     */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.list_menu, menu);
     }
 
+    /**
+     * Set the callbacks to the context.
+     * @param context context of this fragment.
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         callbacks = (Callbacks) context;
     }
 
+    /**
+     * Sets callbacks to null.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         callbacks = null;
     }
 
+    /**
+     * Creates a new event, adds it to the database, and triggers callbacks with it.
+     * @param item the item selected.
+     * @return true if selected, otherwise returns superclasses result.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.new_item) {
@@ -182,12 +199,14 @@ public class ListFragment extends Fragment {
 
             return true;
         }
-        else
-        {
-            return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Sets the hours, minutes, and seconds of a Date all to 0.
+     * @param date the Date to reset.
+     * @return the reset Date.
+     */
     private static Date resetToStartOfDay(Date date) {
         GregorianCalendar c = new GregorianCalendar();
         c.setTime(date);
@@ -202,8 +221,10 @@ public class ListFragment extends Fragment {
         public final TextView name, description, startTime, endTime;
         public final ImageView icon;
 
-
-
+        /**
+         * Sets all fields to their respective views.
+         * @param itemView
+         */
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.event_item_name);
@@ -212,9 +233,7 @@ public class ListFragment extends Fragment {
             startTime = itemView.findViewById(R.id.item_start_time);
             endTime = itemView.findViewById(R.id.item_end_time);
 
-
             itemView.setOnClickListener(v -> callbacks.showEvent(event));
-
         }
     }
 
@@ -277,6 +296,10 @@ public class ListFragment extends Fragment {
         private Drawable icon;
         private final ColorDrawable background;
 
+        /**
+         * Creates a swipe to delete callback.
+         * @param adapter
+         */
         @SuppressLint("ResourceAsColor")
         public SwipeToDeleteCallback(EventListAdapter adapter) {
             super(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
@@ -286,7 +309,9 @@ public class ListFragment extends Fragment {
             background = new ColorDrawable(R.color.purple_200);
         }
 
-
+        /**
+         * Draw the swiper.
+         */
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             super.onChildDraw(c, recyclerView, viewHolder, dX,
@@ -323,7 +348,13 @@ public class ListFragment extends Fragment {
 
         }
 
-
+        /**
+         * forced to implement.
+         * @param recyclerView
+         * @param viewHolder
+         * @param target
+         * @return always returns false.
+         */
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView,
                               @NonNull RecyclerView.ViewHolder viewHolder,
@@ -331,11 +362,15 @@ public class ListFragment extends Fragment {
             return false;
         }
 
+        /**
+         * Delete the event from the adapter when it is swiped.
+         * @param viewHolder
+         * @param direction
+         */
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
             mAdapter.deleteEvent(position);
         }
-
     }
 }
